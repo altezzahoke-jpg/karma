@@ -1,6 +1,35 @@
-- name: Compile Arduino Sketch
-  uses: arduino/compile-sketches@v1
-  with:
-    fqbn: esp32:esp32:esp32c3
-    sketch-paths: |
-      - ./karma
+name: Compile ESP32-C3 Sketch
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Compile Sketch ESP32-C3
+        uses: arduino/compile-sketches@v1
+        with:
+          fqbn: esp32:esp32:esp32c3
+          platforms: |
+            - name: esp32:esp32
+              source-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+          libraries: |
+            - name: Adafruit SSD1306
+            - name: Adafruit GFX Library
+            - name: Wire
+          sketch-paths: |
+            - .
+
+      - name: Upload Binary Output
+        uses: actions/upload-artifact@v4
+        with:
+          name: esp32c3-firmware
+          path: build/*.bin
