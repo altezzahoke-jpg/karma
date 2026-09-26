@@ -7,85 +7,170 @@
 #define OLED_RESET    -1
 #define SCREEN_ADDRESS 0x3C
 
-// Pin I2C Default ESP32-C3 SuperMini: SDA = GPIO 8, SCL = GPIO 9
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 struct LyricLine {
   unsigned long timestampMs; 
-  const char* text;          
+  const char* text1;          
+  const char* text2;          
 };
 
-// Array lirik dengan format string tunggal yang valid.
-// Gunakan \n untuk memindah baris di layar OLED tanpa merusak sintaks C++.
 LyricLine lyrics[] = {
-  { 16170, "Mencari, ku tetap\nmencari kamu" },
-  { 19920, "Hingga saat\nnafasku berhenti" },
-  { 24180, "Kurasa cinta\nsejati tak ada" },
-  { 27840, "Hanya ada dalam\ncerita legenda" },
-  { 31980, "" }, // Jeda Kosong
-  { 39960, "Ah-ah-ah" }, 
-  { 42670, "" }, // Jeda Kosong
-  { 47880, "Kutulis namamu\ndalam jantungku" }, 
-  { 51530, "Agar engkau\nmemahami aku" }, 
-  { 55390, "Dan kugambar wajahmu\ndalam nadiku" }, 
-  { 59380, "Berharap kau takkan\npernah tinggalkanku" }, 
-  { 63170, "Apa kau tak\nmerasakanku?" }, 
-  { 66720, "Kau tak merasakan\nkasih sayangku" }, 
-  { 70600, "Apa kau tak\nmerasakanku?" }, 
-  { 74490, "Kau tak merasakan\nkasih sayangku" }, 
-  { 80810, "Oh-oh, dengarkan\nsebuah lagu untukmu" }, 
-  { 86170, "Tercipta dari\nrintih hatiku" }, 
-  { 90250, "Kau nikmati aku\ndan kau membuangku" }, 
-  { 96150, "Oh-oh, dengarkanlah\nsang Raja Manusia" }, 
-  { 102190, "Kupanjatkan doa\ndan memuja" }, 
-  { 105910, "S'moga hukum karma\ndatang membalasnya" }, 
-  { 112250, "" }, // Jeda Kosong
-  { 120670, "Ah-ah-ah" }, 
-  { 128260, "Apa kau tak\nmerasakanku?" }, 
-  { 131870, "Kau tak merasakan\nkasih sayangku" }, 
-  { 135460, "Apa kau tak\nmerasakanku?" }, 
-  { 139420, "Kau tak merasakan\nkasih sayangku" }, 
-  { 145370, "Oh-oh, dengarkan\nsebuah lagu untukmu" }, 
-  { 151270, "Tercipta dari\nrintih hatiku" }, 
-  { 155170, "Kau nikmati aku\ndan kau membuangku, oh" }, 
-  { 161120, "Oh-oh, dengarkanlah\nsang Raja Manusia" }, 
-  { 167290, "Kupanjatkan doa\ndan memuja" }, 
-  { 170830, "S'moga hukum karma\ndatang membalasnya" }, 
-  { 177180, "Oh-oh, dengarkan\nsebuah lagu untukmu" }, 
-  { 182830, "Tercipta dari\nrintih hatiku" }, 
-  { 186620, "Kau nikmati aku\ndan kau membuangku" }, 
-  { 192820, "Oh-oh, dengarkanlah\nsang Raja Manusia" }, 
-  { 198530, "Kupanjatkan doa\ndan memuja" }, 
-  { 202550, "Semoga hukum karma\ndatang membalasnya" }, 
-  { 213570, "" } // Selesai
+  { 16170, "Mencari", "Mencari kamu" },
+  { 19920, "Hingga saat", "Nafasku berhenti" },
+  { 24180, "Kurasa cinta", "Sejati tak ada" },
+  { 27840, "Hanya ada di", "Cerita legenda" },
+  { 31980, "", "" }, 
+  { 39960, "Ah-ah-ah", "" }, 
+  { 42670, "", "" }, 
+  { 47880, "Kutulis nama", "Dalam jantungku" }, 
+  { 51530, "Agar engkau", "Memahami aku" }, 
+  { 55390, "Dan kugambar", "Dalam nadiku" }, 
+  { 59380, "Berharap kau", "Takkan pergi" }, 
+  { 63170, "Apa kau tak", "Merasakanku?" }, 
+  { 66720, "Kau tak rasa", "Kasih sayangku" }, 
+  { 70600, "Apa kau tak", "Merasakanku?" }, 
+  { 74490, "Kau tak rasa", "Kasih sayangku" }, 
+  { 80810, "Dengarkanlah", "Lagu untukmu" }, 
+  { 86170, "Tercipta dari", "Rintih hatiku" }, 
+  { 90250, "Kau nikmati aku", "Lalu membuangku" }, 
+  { 96150, "Dengarkanlah", "Raja Manusia" }, 
+  { 102190, "Kupanjatkan", "Doa & memuja" }, 
+  { 105910, "S'moga karma", "Datang membalas" }, 
+  { 112250, "", "" }, 
+  { 120670, "Ah-ah-ah", "" }, 
+  { 128260, "Apa kau tak", "Merasakanku?" }, 
+  { 131870, "Kau tak rasa", "Kasih sayangku" }, 
+  { 135460, "Apa kau tak", "Merasakanku?" }, 
+  { 139420, "Kau tak rasa", "Kasih sayangku" }, 
+  { 145370, "Dengarkan", "Lagu untukmu" }, 
+  { 151270, "Tercipta dari", "Rintih hatiku" }, 
+  { 155170, "Kau nikmati aku", "Dan membuangku" }, 
+  { 161120, "Dengarkanlah", "Raja Manusia" }, 
+  { 167290, "Kupanjatkan", "Doa & memuja" }, 
+  { 170830, "S'moga karma", "Datang membalas" }, 
+  { 177180, "Dengarkan", "Lagu untukmu" }, 
+  { 182830, "Tercipta dari", "Rintih hatiku" }, 
+  { 186620, "Kau nikmati aku", "Dan membuangku" }, 
+  { 192820, "Dengarkanlah", "Raja Manusia" }, 
+  { 198530, "Kupanjatkan", "Doa & memuja" }, 
+  { 202550, "Semoga karma", "Datang membalas" }, 
+  { 213570, "SELESAI", "" }
 };
 
 const int totalLines = sizeof(lyrics) / sizeof(lyrics[0]);
 unsigned long startTime = 0;
 int currentLine = -1;
 
+// --- FUNGSI ANIMASI 1: Geser dari Kanan ke Kiri (Slide from Right) ---
+void effectSlideRight(const char* t1, const char* t2) {
+  for (int x = 128; x >= 10; x -= 14) {
+    display.clearDisplay();
+    display.drawRect(0, 0, 128, 64, SSD1306_WHITE);
+    display.setCursor(x, 22);
+    display.println(t1);
+    display.setCursor(x, 38);
+    display.println(t2);
+    display.display();
+    delay(10);
+  }
+}
+
+// --- FUNGSI ANIMASI 2: Efek Ketik (Typewriter Effect) ---
+void effectTypewriter(const char* t1, const char* t2) {
+  char buffer1[32] = "";
+  char buffer2[32] = "";
+  int len1 = strlen(t1);
+  int len2 = strlen(t2);
+  int maxLen = max(len1, len2);
+
+  for (int i = 0; i <= maxLen; i++) {
+    display.clearDisplay();
+    display.drawRect(0, 0, 128, 64, SSD1306_WHITE);
+    
+    if (i < len1) { buffer1[i] = t1[i]; buffer1[i+1] = '\0'; }
+    if (i < len2) { buffer2[i] = t2[i]; buffer2[i+1] = '\0'; }
+
+    display.setCursor(10, 22);
+    display.println(buffer1);
+    display.setCursor(10, 38);
+    display.println(buffer2);
+    display.display();
+    delay(20);
+  }
+}
+
+// --- FUNGSI ANIMASI 3: Efek Kedip Masuk (Blink/Fade In Simulation) ---
+void effectBlinkIn(const char* t1, const char* t2) {
+  for (int b = 0; b < 3; b++) {
+    display.clearDisplay();
+    display.display();
+    delay(30);
+    display.drawRect(0, 0, 128, 64, SSD1306_WHITE);
+    display.setCursor(10, 22);
+    display.println(t1);
+    display.setCursor(10, 38);
+    display.println(t2);
+    display.display();
+    delay(40);
+  }
+}
+
+// --- FUNGSI ANIMASI 4: Efek Geser dari Atas (Drop Down) ---
+void effectDropDown(const char* t1, const char* t2) {
+  for (int y = 0; y <= 22; y += 4) {
+    display.clearDisplay();
+    display.drawRect(0, 0, 128, 64, SSD1306_WHITE);
+    display.setCursor(10, y);
+    display.println(t1);
+    display.setCursor(10, y + 16);
+    display.println(t2);
+    display.display();
+    delay(15);
+  }
+}
+
+// Fungsi utama pemilih transisi otomatis berdasarkan nomor baris lirik
+void playDynamicTransition(int index, const char* t1, const char* t2) {
+  int animType = index % 4; // Berputar dari 0 sampai 3 secara otomatis
+
+  switch (animType) {
+    case 0:
+      effectSlideRight(t1, t2);
+      break;
+    case 1:
+      effectTypewriter(t1, t2);
+      break;
+    case 2:
+      effectBlinkIn(t1, t2);
+      break;
+    case 3:
+      effectDropDown(t1, t2);
+      break;
+  }
+}
+
 void setup() {
   Serial.begin(115200);
-  
-  // Inisialisasi bus I2C ESP32-C3 (SDA: GPIO 8, SCL: GPIO 9)
   Wire.begin(8, 9); 
 
   if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
-    Serial.println(F("Gagal menginisialisasi OLED SSD1306"));
-    for (;;); // Berhenti jika OLED tidak merespons
+    Serial.println(F("OLED Gagal!"));
+    for (;;);
   }
 
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
-  display.setTextWrap(true); 
   
-  // Tampilan Pembuka
-  display.setCursor(10, 25);
-  display.println(F("Kangen Band - Karma"));
+  display.drawRect(0, 0, 128, 64, SSD1306_WHITE);
+  display.setCursor(18, 20);
+  display.println(F("KARMA - DYNAMIC"));
+  display.setCursor(28, 36);
+  display.println(F("OLED ESP32-C3"));
   display.display();
   
-  delay(3000); // Jeda sebelum lagu dimainkan
+  delay(3000);
   startTime = millis(); 
 }
 
@@ -93,7 +178,6 @@ void loop() {
   unsigned long elapsed = millis() - startTime;
   int foundIndex = -1;
 
-  // Mencari indeks lirik aktif berdasarkan waktu berjalan
   for (int i = 0; i < totalLines; i++) {
     if (elapsed >= lyrics[i].timestampMs) {
       foundIndex = i;
@@ -102,22 +186,10 @@ void loop() {
     }
   }
 
-  // Update tampilan hanya saat lirik berpindah
   if (foundIndex != currentLine && foundIndex != -1) {
     currentLine = foundIndex;
     
-    display.clearDisplay();
-    
-    // Header
-    display.setTextSize(1);
-    display.setCursor(0, 0);
-    display.println(F("--- KARMA ---"));
-    display.drawLine(0, 10, 128, 10, SSD1306_WHITE);
-
-    // Area Teks Lirik
-    display.setCursor(0, 22);
-    display.println(lyrics[currentLine].text);
-
-    display.display();
+    // Panggil efek transisi yang berbeda-beda secara otomatis
+    playDynamicTransition(currentLine, lyrics[currentLine].text1, lyrics[currentLine].text2);
   }
 }
