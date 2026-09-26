@@ -28,6 +28,5 @@ jobs:
           arduino-cli lib install "Adafruit SSD1306"
 
       - name: Compile Sketch
-        run: |
-          # Sesuaikan nama folder/file sketch Anda di bawah ini jika berbeda
-          arduino-cli compile --fqbn esp32:esp32:esp32c3 esp32-lirik
+  run: |
+    arduino-cli compile --fqbn esp32:esp32:esp32c3 karma
