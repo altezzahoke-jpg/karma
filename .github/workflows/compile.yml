@@ -25,7 +25,7 @@ jobs:
             - name: Adafruit SSD1306
             - name: Adafruit GFX Library
           sketch-paths: |
-            - .
+            - ./karma
 
       - name: Upload Binary Output
         uses: actions/upload-artifact@v4
