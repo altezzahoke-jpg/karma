@@ -24,7 +24,6 @@ jobs:
           libraries: |
             - name: Adafruit SSD1306
             - name: Adafruit GFX Library
-            - name: Wire
           sketch-paths: |
             - .
 
