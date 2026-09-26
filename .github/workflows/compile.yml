@@ -28,5 +28,5 @@ jobs:
           arduino-cli lib install "Adafruit SSD1306"
 
       - name: Compile Sketch
-  run: |
-    arduino-cli compile --fqbn esp32:esp32:esp32c3 karma
+        run: |
+          arduino-cli compile --fqbn esp32:esp32:esp32c3 karma
